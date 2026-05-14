@@ -1,0 +1,5 @@
+support/
+*.log
+*.tmp
+.env
+tmp_var.sh

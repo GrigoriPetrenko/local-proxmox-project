@@ -1,0 +1,28 @@
+name: Proxmox Deploy
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run deploy script on Proxmox
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROXMOX_HOST }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /root/proxmox-project
+            git pull
+            bash deploy-app.sh

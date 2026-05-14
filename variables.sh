@@ -1,0 +1,16 @@
+#!/bin/bash
+
+HOST=""
+
+TEMPLATE=""
+
+WEB_CT_ID=""
+PROXY_CT_ID=""
+
+WEB_IP=""
+PROXY_IP=""
+
+GATEWAY=""
+
+WEB_HOSTNAME=""
+PROXY_HOSTNAME=""
