@@ -1,15 +1,25 @@
 #!/bin/bash
 
-source variables.sh
+source tmp_var.sh
+echo "$HOST"
 
-ssh $HOST << EOF
+ssh -T $HOST << EOF
 
-# STOP OLD CT
-pct stop $WEB_CT_ID 2>/dev/null
-pct stop $PROXY_CT_ID 2>/dev/null
+echo "SCRIPT START"
 
-# REMOVE OLD CT
-pct destroy $WEB_CT_ID 2>/dev/null
-pct destroy $PROXY_CT_ID 2>/dev/null
+get_ctid_by_name() {
+    pct list | awk -v name="\$1" '$3 == name {print \$1}'
+}
+
+for name in "\${WEB_HOSTNAMES[@]}"; do
+    id=\$(get_ctid_by_name "\$name")
+
+    if [ -n "\$id" ]; then
+        pct stop "\$id" 2>/dev/null
+        pct destroy "\$id" 2>/dev/null
+    fi
+done
+
+echo "SCRIPT END"
 
 EOF
