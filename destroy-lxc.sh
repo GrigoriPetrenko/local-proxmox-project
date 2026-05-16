@@ -1,18 +1,20 @@
 #!/bin/bash
 
 source tmp_var.sh
-echo "$HOST"
 
-ssh -T $HOST << EOF
+ssh -T "$HOST" << EOF
+WEB_HOSTNAMES=("web" "proxy")
 
 echo "SCRIPT START"
 
 get_ctid_by_name() {
-    pct list | awk -v name="\$1" '$3 == name {print \$1}'
+    pct list | awk -v name="\$1" '\$3 == name {print \$1}'
 }
 
-for name in "\${WEB_HOSTNAMES[@]}"; do
+for name in \${WEB_HOSTNAMES[@]}; do
     id=\$(get_ctid_by_name "\$name")
+
+    echo "NAME=\$name ID=\$id"
 
     if [ -n "\$id" ]; then
         pct stop "\$id" 2>/dev/null
@@ -21,5 +23,4 @@ for name in "\${WEB_HOSTNAMES[@]}"; do
 done
 
 echo "SCRIPT END"
-
 EOF
