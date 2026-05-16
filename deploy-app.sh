@@ -6,6 +6,17 @@ ssh $HOST << EOF
 
 sleep 5
 
+pct exec $JENKINS_CT_ID -- bash -c "
+apt update &&
+apt install -y openjdk-17-jdk curl &&
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null &&
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list &&
+apt update &&
+apt install -y jenkins &&
+systemctl enable jenkins &&
+systemctl start jenkins
+"
+
 pct exec $WEB_CT_ID -- bash -c "
 apt update &&
 apt install -y nginx &&

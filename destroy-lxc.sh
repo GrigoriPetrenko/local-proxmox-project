@@ -3,24 +3,34 @@
 source tmp_var.sh
 
 ssh -T "$HOST" << EOF
-WEB_HOSTNAMES=("web" "proxy")
-
-echo "SCRIPT START"
 
 get_ctid_by_name() {
     pct list | awk -v name="\$1" '\$3 == name {print \$1}'
 }
 
-for name in \${WEB_HOSTNAMES[@]}; do
-    id=\$(get_ctid_by_name "\$name")
+name1="$1"
+name2="$2"
+name3="$3"
 
-    echo "NAME=\$name ID=\$id"
+id1=\$(get_ctid_by_name "\$name1")
+echo "NAME=\$name1 ID=\$id1"
+if [ -n "\$id1" ]; then
+    pct stop "\$id1" 2>/dev/null
+    pct destroy "\$id1" 2>/dev/null
+fi
 
-    if [ -n "\$id" ]; then
-        pct stop "\$id" 2>/dev/null
-        pct destroy "\$id" 2>/dev/null
-    fi
-done
+id2=\$(get_ctid_by_name "\$name2")
+echo "NAME=\$name2 ID=\$id2"
+if [ -n "\$id2" ]; then
+    pct stop "\$id2" 2>/dev/null
+    pct destroy "\$id2" 2>/dev/null
+fi
 
-echo "SCRIPT END"
+id3=\$(get_ctid_by_name "\$name3")
+echo "NAME=\$name3 ID=\$id3"
+if [ -n "\$id3" ]; then
+    pct stop "\$id3" 2>/dev/null
+    pct destroy "\$id3" 2>/dev/null
+fi
+
 EOF

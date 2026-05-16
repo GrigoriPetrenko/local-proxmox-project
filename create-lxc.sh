@@ -1,8 +1,17 @@
 #!/bin/bash
 
-source variables.sh
+source tmp_var.sh
 
 ssh $HOST << EOF
+
+pct create $JENKINS_CT_ID $TEMPLATE \
+  --hostname $JENKINS_HOSTNAME \
+  --memory 512 \
+  --cores 1 \
+  --net0 name=eth0,bridge=vmbr0,ip=$JENKINS_IP/24,gw=$GATEWAY \
+  --rootfs local-lvm:4
+
+pct start $JENKINS_CT_ID
 
 pct create $WEB_CT_ID $TEMPLATE \
   --hostname $WEB_HOSTNAME \
