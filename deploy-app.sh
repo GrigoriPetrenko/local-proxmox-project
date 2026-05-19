@@ -13,8 +13,14 @@ curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee /usr/s
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list &&
 apt update &&
 apt install -y jenkins &&
+
 systemctl enable jenkins &&
-systemctl start jenkins
+systemctl start jenkins &&
+
+sleep 30 &&
+
+jenkins-cli plugins install configuration-as-code &&
+systemctl restart jenkins
 "
 
 pct exec $WEB_CT_ID -- bash -c "
