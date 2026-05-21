@@ -13,22 +13,22 @@ pct create $JENKINS_CT_ID $TEMPLATE \
 
 pct start $JENKINS_CT_ID
 
-pct create $WEB_CT_ID $TEMPLATE \
-  --hostname $WEB_HOSTNAME \
-  --memory 512 \
-  --cores 1 \
-  --net0 name=eth0,bridge=vmbr0,ip=$WEB_IP/24,gw=$GATEWAY \
-  --rootfs local-lvm:4
+# pct create $WEB_CT_ID $TEMPLATE \
+#   --hostname $WEB_HOSTNAME \
+#   --memory 512 \
+#   --cores 1 \
+#   --net0 name=eth0,bridge=vmbr0,ip=$WEB_IP/24,gw=$GATEWAY \
+#   --rootfs local-lvm:4
 
-pct start $WEB_CT_ID
+# pct start $WEB_CT_ID
 
-pct create $PROXY_CT_ID $TEMPLATE \
-  --hostname $PROXY_HOSTNAME \
-  --memory 512 \
-  --cores 1 \
-  --net0 name=eth0,bridge=vmbr0,ip=$PROXY_IP/24,gw=$GATEWAY \
-  --rootfs local-lvm:4
+# pct create $PROXY_CT_ID $TEMPLATE \
+#   --hostname $PROXY_HOSTNAME \
+#   --memory 512 \
+#   --cores 1 \
+#   --net0 name=eth0,bridge=vmbr0,ip=$PROXY_IP/24,gw=$GATEWAY \
+#   --rootfs local-lvm:4
 
-pct start $PROXY_CT_ID
+# pct start $PROXY_CT_ID
 
 EOF
