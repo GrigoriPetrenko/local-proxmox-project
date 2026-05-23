@@ -25,33 +25,33 @@ echo "=== DONE ==="
 echo "JENKINS PASSWORD:"
 pct exec $JENKINS_CT_ID -- cat /var/lib/jenkins/secrets/initialAdminPassword
 
-# echo "=== INSTALL WEB ==="
+echo "=== INSTALL WEB ==="
 
-# pct exec $WEB_CT_ID -- bash -c "
-# apt update &&
-# apt install -y nginx &&
-# echo 'WEB OK' > /var/www/html/index.html &&
-# systemctl enable nginx &&
-# systemctl restart nginx
-# "
+pct exec $WEB_CT_ID -- bash -c "
+apt update &&
+apt install -y nginx &&
+echo 'WEB OK' > /var/www/html/index.html &&
+systemctl enable nginx &&
+systemctl restart nginx
+"
 
-# echo "=== INSTALL PROXY ==="
+echo "=== INSTALL PROXY ==="
 
-# pct exec $PROXY_CT_ID -- bash -c "
-# apt update &&
-# apt install -y nginx &&
-# cat > /etc/nginx/sites-available/default <<EOL
-# server {
-#     listen 80;
+pct exec $PROXY_CT_ID -- bash -c "
+apt update &&
+apt install -y nginx &&
+cat > /etc/nginx/sites-available/default <<EOL
+server {
+    listen 80;
 
-#     location / {
-#         proxy_pass http://$JENKINS_IP:8080;
-#     }
-# }
-# EOL
-# systemctl enable nginx &&
-# systemctl restart nginx
-# "
+    location / {
+        proxy_pass http://$JENKINS_IP:8080;
+    }
+}
+EOL
+systemctl enable nginx &&
+systemctl restart nginx
+"
 
 echo "=== DEPLOYMENT DONE ==="
 
