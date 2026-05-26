@@ -9,21 +9,37 @@ set -e
 echo "=== START DEPLOYMENT ==="
 sleep 15
 
-echo "=== INSTALL JENKINS (DEB METHOD) ==="
+echo "=== INSTALL DOCKER ==="
 
 pct exec $JENKINS_CT_ID -- bash -c "
 apt update &&
-apt install -y openjdk-17-jre wget ca-certificates &&
-cd /root &&
-wget -O jenkins.deb https://get.jenkins.io/debian-stable/jenkins_2.492.1_all.deb &&
-apt install -y ./jenkins.deb &&
-systemctl enable --now jenkins
+apt install -y docker.io &&
+systemctl enable docker &&
+systemctl restart docker
 "
 
-echo "=== DONE ==="
+echo "=== RUN JENKINS ==="
+
+pct exec $JENKINS_CT_ID -- bash -c "
+docker volume create jenkins_home || true
+
+docker rm -f jenkins || true
+
+docker run -d \
+  --name jenkins \
+  --restart unless-stopped \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  jenkins/jenkins:lts
+"
+
+echo "=== WAIT FOR JENKINS ==="
+sleep 20
 
 echo "JENKINS PASSWORD:"
-pct exec $JENKINS_CT_ID -- cat /var/lib/jenkins/secrets/initialAdminPassword
+#pct exec $JENKINS_CT_ID -- cat /var/lib/jenkins/secrets/initialAdminPassword
+pct exec $JENKINS_CT_ID -- docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 echo "=== INSTALL WEB ==="
 

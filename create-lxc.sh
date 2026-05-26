@@ -6,10 +6,14 @@ ssh $HOST << EOF
 
 pct create $JENKINS_CT_ID $TEMPLATE \
   --hostname $JENKINS_HOSTNAME \
-  --memory 512 \
+  --memory 1024 \
   --cores 1 \
   --net0 name=eth0,bridge=vmbr0,ip=$JENKINS_IP/24,gw=$GATEWAY \
-  --rootfs local-lvm:4
+  --rootfs local-lvm:20
+
+#Last fix
+pct set $JENKINS_CT_ID -features nesting=1,keyctl=1
+pct set $JENKINS_CT_ID -unprivileged 0
 
 pct start $JENKINS_CT_ID
 
