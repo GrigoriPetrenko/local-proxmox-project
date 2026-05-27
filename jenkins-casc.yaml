@@ -1,0 +1,14 @@
+jenkins:
+  systemMessage: "Auto Jenkins config (CASC)"
+
+  numExecutors: 1
+
+  securityRealm:
+    local:
+      allowsSignup: false
+
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+unclassified: {}

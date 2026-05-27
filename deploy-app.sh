@@ -3,11 +3,20 @@ set -e
 
 source tmp_var.sh
 
+echo "=== UPLOAD JENKINS CASC TO PROXMOX ==="
+scp jenkins-casc.yaml $HOST:/tmp/jenkins-casc.yaml
+
 ssh "$HOST" << EOF
 set -e
 
 echo "=== START DEPLOYMENT ==="
 sleep 15
+
+echo "=== COPY JENKINS CASC TO LXC ==="
+
+pct exec $JENKINS_CT_ID -- mkdir -p /opt
+
+pct push $JENKINS_CT_ID /tmp/jenkins-casc.yaml /opt/jenkins-casc.yaml
 
 echo "=== INSTALL DOCKER ==="
 
@@ -31,6 +40,8 @@ docker run -d \
   -p 8080:8080 \
   -p 50000:50000 \
   -v jenkins_home:/var/jenkins_home \
+  -v /opt/jenkins-casc.yaml:/var/jenkins_home/casc.yaml \
+  -e CASC_JENKINS_CONFIG=/var/jenkins_home/casc.yaml \
   jenkins/jenkins:lts
 "
 
