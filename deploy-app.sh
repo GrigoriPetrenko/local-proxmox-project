@@ -67,15 +67,22 @@ echo "=== INSTALL PROXY ==="
 pct exec $PROXY_CT_ID -- bash -c "
 apt update &&
 apt install -y nginx &&
-cat > /etc/nginx/sites-available/default <<EOL
+cat > /etc/nginx/conf.d/proxy.conf <<EOL
 server {
-    listen 80;
+    listen 80 default_server;
+    server_name _;
 
     location / {
-        proxy_pass http://$JENKINS_IP:8080;
+        proxy_pass http://$WEB_IP;
+    }
+
+    location /jenkins/ {
+        proxy_pass http://$JENKINS_IP:8080/;
     }
 }
 EOL
+
+rm -f /etc/nginx/sites-enabled/default || true
 systemctl enable nginx &&
 systemctl restart nginx
 "
