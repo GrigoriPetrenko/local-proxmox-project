@@ -56,8 +56,12 @@ echo "=== INSTALL WEB ==="
 
 pct exec $WEB_CT_ID -- bash -c "
 apt update &&
-apt install -y nginx &&
-echo 'WEB OK' > /var/www/html/index.html &&
+apt install -y nginx"
+
+scp $HOST:/var/tmp/index.html /tmp/index.html
+pct push $WEB_CT_ID /tmp/index.html /var/www/html/index.html
+
+pct exec $WEB_CT_ID -- bash -c "
 systemctl enable nginx &&
 systemctl restart nginx
 "
