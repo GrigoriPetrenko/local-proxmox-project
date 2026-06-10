@@ -61,7 +61,8 @@ sleep 20
 
 echo "JENKINS PASSWORD:"
 #pct exec $JENKINS_CT_ID -- cat /var/lib/jenkins/secrets/initialAdminPassword
-pct exec $JENKINS_CT_ID -- docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+#pct exec $JENKINS_CT_ID -- docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+pct exec $JENKINS_CT_ID -- docker ps
 
 echo "=== INSTALL WEB ==="
 
