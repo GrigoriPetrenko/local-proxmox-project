@@ -5,6 +5,8 @@ source tmp_var.sh
 
 echo "=== UPLOAD JENKINS CASC TO PROXMOX ==="
 scp jenkins-casc.yaml $HOST:/tmp/jenkins-casc.yaml
+echo "=== UPLOAD DOCKERFILE TO PROXMOX ==="
+scp Dockerfile $HOST:/tmp/Dockerfile
 
 ssh "$HOST" << EOF
 set -e
@@ -17,6 +19,8 @@ echo "=== COPY JENKINS CASC TO LXC ==="
 pct exec $JENKINS_CT_ID -- mkdir -p /opt
 
 pct push $JENKINS_CT_ID /tmp/jenkins-casc.yaml /opt/jenkins-casc.yaml
+pct exec $JENKINS_CT_ID -- mkdir -p /opt/jenkins
+pct push $JENKINS_CT_ID /tmp/Dockerfile /opt/jenkins/Dockerfile
 
 echo "=== INSTALL DOCKER ==="
 
@@ -25,6 +29,13 @@ apt update &&
 apt install -y docker.io &&
 systemctl enable docker &&
 systemctl restart docker
+"
+
+echo "=== BUILD JENKINS IMAGE WITH PLUGINS ==="
+
+pct exec $JENKINS_CT_ID -- bash -c "
+cd /opt/jenkins &&
+docker build -t my-jenkins .
 "
 
 echo "=== RUN JENKINS ==="
@@ -42,7 +53,7 @@ docker run -d \
   -v jenkins_home:/var/jenkins_home \
   -v /opt/jenkins-casc.yaml:/var/jenkins_home/casc.yaml \
   -e CASC_JENKINS_CONFIG=/var/jenkins_home/casc.yaml \
-  jenkins/jenkins:lts
+  my-jenkins
 "
 
 echo "=== WAIT FOR JENKINS ==="
