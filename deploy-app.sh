@@ -54,9 +54,10 @@ docker run -d \
   --restart unless-stopped \
   -p 8080:8080 \
   -p 50000:50000 \
+  -e JENKINS_HOME=/var/jenkins_home \
+  -e CASC_JENKINS_CONFIG=/var/jenkins_home/casc.yaml \
   -v jenkins_home:/var/jenkins_home \
   -v /opt/jenkins-casc.yaml:/var/jenkins_home/casc.yaml \
-  -e CASC_JENKINS_CONFIG=/var/jenkins_home/casc.yaml \
   -v /opt/jenkins/seed.groovy:/var/jenkins_home/seed.groovy \
   my-jenkins
 "

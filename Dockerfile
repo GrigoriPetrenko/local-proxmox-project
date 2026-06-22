@@ -6,4 +6,9 @@ RUN jenkins-plugin-cli --plugins \
   git \
   workflow-aggregator \
   configuration-as-code \
-  job-dsl
+  job-dsl \
+  workflow-cps \
+  workflow-job \
+  pipeline-model-definition \
+  credentials \
+  script-security

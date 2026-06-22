@@ -16,23 +16,3 @@ jenkins:
 
 unclassified: {}
 
-jobs:
-  - script: |
-      pipelineJob('seed-job') {
-        definition {
-          cps {
-            script("""
-pipeline {
-  agent any
-  stages {
-    stage('Generate') {
-      steps {
-        jobDsl targets: 'seed.groovy'
-      }
-    }
-  }
-}
-""")
-          }
-        }
-      }
